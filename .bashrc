@@ -112,6 +112,12 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+# enable bash completion for OSX via Homebrew
+if [[ "$OSTYPE" == "darwin"* ]] && [ -d $(brew --prefix)/etc/bash_completion.d/ ]; then
+    . $(brew --prefix)/etc/bash_completion.d/git-completion.bash
+    . $(brew --prefix)/etc/bash_completion.d/git-prompt.sh
+fi
+
 # user path addition(s)
 if [ -d ~/scripts ] ; then
     PATH=$HOME/scripts:$PATH
