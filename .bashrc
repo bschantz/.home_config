@@ -1,3 +1,4 @@
+echo -e ".bashrc"
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -34,7 +35,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+    xterm-color|xterm-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -91,7 +92,10 @@ alias l='ls -CF'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Include autojump functions
-if [ -f /usr/share/autojump/autojump.sh ]; then
+if [ -f /usr/share/autojump/autojump.bash ]; then
+    . /usr/share/autojump/autojump.bash
+    export AUTOJUMP_AUTOCOMPLETE_CMDS='cp vim find'
+elif [ -f /usr/share/autojump/autojump.sh ]; then
     . /usr/share/autojump/autojump.sh
     export AUTOJUMP_AUTOCOMPLETE_CMDS='cp vim find'
 fi
@@ -129,7 +133,7 @@ export DEBEMAIL="lastchance@gmail.com"
 export VISUAL=/usr/bin/vi
 prompt_command () {
     history -a
-    autojump_add_to_database
+    # autojump_add_to_database
     echo -ne "\033]0;${USER}@${HOSTNAME} - ${PWD} - $*\007"
     if [ $? -eq 0 ]; then # set an error string for the prompt, if applicable
         ERRPROMPT=" "
@@ -158,7 +162,7 @@ prompt_command () {
         \h${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
         \w\n${GREEN}${BRANCH}${DEFAULT}$ "
 }
-PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} prompt_command"
 
 fmt_time () { #format time just the way I likes it
     if [ `date +%p` = "PM" ]; then
