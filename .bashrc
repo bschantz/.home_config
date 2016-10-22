@@ -2,6 +2,9 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# set platform
+OSNAME=`uname`
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -135,7 +138,6 @@ export DEBEMAIL="lastchance@gmail.com"
 export VISUAL=/usr/bin/vi
 prompt_command () {
     history -a
-    autojump_add_to_database
     echo -ne "\033]0;${NICKNAME}:${USER} - ${PWD} - $*\007"
     if [ $? -eq 0 ]; then # set an error string for the prompt, if applicable
         ERRPROMPT=" "
@@ -164,6 +166,10 @@ prompt_command () {
         ${NICKNAME}${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
         \w\n${GREEN}${BRANCH}${DEFAULT}$ "
 }
+if [[ "$OSNAME" == "Darwin" ]]; then
+    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+fi
+
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} prompt_command"
 
 fmt_time () { #format time just the way I likes it
