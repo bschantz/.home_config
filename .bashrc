@@ -5,6 +5,9 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+# Check for NICKNAME and set if not present or empty
+[ -z "$NICKNAME" ] && NICKNAME="${HOSTNAME}"
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -54,16 +57,16 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@${NICKNAME}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@${NICKNAME}:\w\$ '
 fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
     xterm*|rxvt*)
-        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@${NICKNAME}: \w\a\]$PS1"
         ;;
     *)
         ;;
@@ -132,8 +135,8 @@ export DEBEMAIL="lastchance@gmail.com"
 export VISUAL=/usr/bin/vi
 prompt_command () {
     history -a
-    # autojump_add_to_database
-    echo -ne "\033]0;${USER}@${HOSTNAME} - ${PWD} - $*\007"
+    autojump_add_to_database
+    echo -ne "\033]0;${NICKNAME}:${USER} - ${PWD} - $*\007"
     if [ $? -eq 0 ]; then # set an error string for the prompt, if applicable
         ERRPROMPT=" "
     else
@@ -158,7 +161,7 @@ prompt_command () {
     # set the titlebar to the last 2 fields of pwd
     local TITLEBAR='\[\e]2;`pwdtail`\a'
     export PS1="\[${TITLEBAR}\]${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\
-        \h${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
+        ${NICKNAME}${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
         \w\n${GREEN}${BRANCH}${DEFAULT}$ "
 }
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} prompt_command"
