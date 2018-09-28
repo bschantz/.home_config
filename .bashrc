@@ -162,8 +162,8 @@ prompt_command () {
     # setting for text color
     local DEFAULT="\[\033[0;39m\]"
     # set the titlebar to the last 2 fields of pwd
-    local TITLEBAR='\[\e]2;`pwdtail`\a'
-    export PS1="\[${TITLEBAR}\]${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\
+    local TITLEBAR='\[\e]2;`pwdtail`\a\]'
+    export PS1="${TITLEBAR}${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\
         ${NICKNAME}${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
         \w\n${GREEN}${BRANCH}${DEFAULT}$ "
 }
