@@ -136,7 +136,9 @@ fi
 export DEBFULLNAME="Brian Schantz"
 export DEBEMAIL="lastchance@gmail.com"
 
-export VISUAL=/usr/bin/vi
+export EDITOR=/usr/bin/vim
+export VISUAL=/usr/bin/vim
+
 prompt_command () {
     history -a
     echo -ne "\033]0;${NICKNAME}:${USER} - ${PWD} - $*\007"
