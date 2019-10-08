@@ -142,6 +142,24 @@ export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
 export SYSTEMD_EDITOR=/usr/bin/vim
 
+# custom prompt breaks putting venv in PS1, this fixes that
+function virtualenv_info(){
+    # Get Virtual Env
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        # Strip out the path and just leave the env name
+        venv="${VIRTUAL_ENV##*/}"
+    else
+        # In case you don't have one activated
+        venv=''
+    fi
+    [[ -n "$venv" ]] && echo "($venv) "
+}
+
+# disable the default virtualenv prompt change
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+VENV="\$(virtualenv_info)";
+
 prompt_command () {
     history -a
     echo -ne "\033]0;${NICKNAME}:${USER} - ${PWD} - $*\007"
@@ -168,7 +186,7 @@ prompt_command () {
     local DEFAULT="\[\033[0;39m\]"
     # set the titlebar to the last 2 fields of pwd
     local TITLEBAR='\[\e]2;`pwdtail`\a\]'
-    export PS1="${TITLEBAR}${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\
+    export PS1="${TITLEBAR}${WHITE}${VENV}${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\
         ${NICKNAME}${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
         \w\n${GREEN}${BRANCH}${DEFAULT}$ "
 }
