@@ -140,6 +140,7 @@ export DEBEMAIL="lastchance@gmail.com"
 
 export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
+export SYSTEMD_EDITOR=/usr/bin/vim
 
 prompt_command () {
     history -a
