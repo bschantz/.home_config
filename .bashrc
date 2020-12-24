@@ -130,11 +130,6 @@ if [[ "$OSTYPE" == "darwin"* ]] && [ -d $(brew --prefix)/etc/bash_completion.d/ 
     . $(brew --prefix)/etc/bash_completion.d/git-prompt.sh
 fi
 
-# user path addition(s)
-if [ -d ~/scripts ] ; then
-    PATH=$HOME/scripts:$PATH
-fi
-
 export DEBFULLNAME="Brian Schantz"
 export DEBEMAIL="lastchance@gmail.com"
 
@@ -147,7 +142,7 @@ function virtualenv_info(){
     # Get Virtual Env
     if [[ -n "$VIRTUAL_ENV" ]]; then
         # Strip out the path and just leave the env name
-        venv="${VIRTUAL_ENV##*/}"
+        venv="venv: ${VIRTUAL_ENV##*/}"
     else
         # In case you don't have one activated
         venv=''
@@ -158,7 +153,7 @@ function virtualenv_info(){
 # disable the default virtualenv prompt change
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-VENV="\$(virtualenv_info)";
+VENV="\$(virtualenv_info)\$CONDA_PROMPT_MODIFIER";
 
 prompt_command () {
     history -a
@@ -181,14 +176,19 @@ prompt_command () {
     local DKGRAY="\[\033[1;30m\]"
     local WHITE="\[\033[1;37m\]"
     local RED="\[\033[0;31m\]"
+    local YELLOW="\[\033[0;33m\]"
     # return color to Terminal
     # setting for text color
     local DEFAULT="\[\033[0;39m\]"
     # set the titlebar to the last 2 fields of pwd
-    local TITLEBAR='\[\e]2;`pwdtail`\a\]'
-    export PS1="${TITLEBAR}${WHITE}${VENV}${CYAN}[ ${BCYAN}\u${GREEN}@${BCYAN}\
-        ${NICKNAME}${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]${RED}$ERRPROMPT${GRAY}\
-        \w\n${GREEN}${BRANCH}${DEFAULT}$ "
+    local TITLEBAR='\[\033]2;`pwdtail`\a\]'
+
+    local PART1="${TITLEBAR}${YELLOW}${VENV}${CYAN}"
+    local PART2="[ ${BCYAN}\u${GREEN}@${BCYAN}${NICKNAME}${DKGRAY}(${LOAD}) ${WHITE}${TIME} ${CYAN}]"
+    local PART3="${RED}$ERRPROMPT${GRAY}\w\n"
+    local PART4="${GREEN}${BRANCH}${DEFAULT}$ "
+
+    export PS1="${PART1}${PART2}${PART3}${PART4}"
 }
 if [[ "$OSNAME" == "Darwin" ]]; then
     [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
@@ -222,3 +222,6 @@ chkload () { #gets the current 1m avg CPU load
     echo $CURRLOAD
 }
 
+
+
+complete -C /usr/bin/terraform terraform

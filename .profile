@@ -20,6 +20,11 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
+# user path addition(s)
+if [ -d "$HOME/scripts" ] ; then
+    PATH=$HOME/scripts:$PATH
+fi
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
