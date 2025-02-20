@@ -15,6 +15,8 @@ set expandtab
 set foldnestmax=5
 set laststatus=2
 
+set modeline
+
 " Make the cursor visible
 " ----------------------
 if &term =~ "xterm\\|rxvt"
