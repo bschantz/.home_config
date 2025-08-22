@@ -227,3 +227,11 @@ complete -C /usr/bin/terraform terraform
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# WSL Copy-Paste Aliases (wsl-copy-paste)
+# Perfect clipboard integration between WSL and Windows
+if hash powershell.exe 2>/dev/null; then
+    alias copy='powershell.exe -noprofile -command "\$stdin = [Console]::OpenStandardInput(); \$bytes = [System.IO.MemoryStream]::new(); \$stdin.CopyTo(\$bytes); \$text = [System.Text.Encoding]::UTF8.GetString(\$bytes.ToArray()); \$text = \$text -replace \"\`n\", \"\`r\`n\"; Set-Clipboard -Value \$text"'
+    alias paste='powershell.exe -noprofile -command "\$text = Get-Clipboard -Raw; \$bytes = [System.Text.Encoding]::UTF8.GetBytes(\$text); [Console]::OpenStandardOutput().Write(\$bytes, 0, \$bytes.Length)" | tr -d "\r"'
+fi
+
